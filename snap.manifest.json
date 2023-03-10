@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0",
+  "description": "Account Abstraction Snap",
+  "proposedName": "AA Snap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arch0125/aa-snap"
+  },
+  "source": {
+    "shasum": "cW7HIg+ddteiEKtgQz8QllI7BrQSa2l30Nea5bLZvNw=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "iconPath": "images/icon.svg",
+        "packageName": "aa-snap37",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_confirm": {},
+    "endowment:network-access": {},
+    "endowment:ethereum-provider": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": false
+    }
+  },
+  "manifestVersion": "0.1"
+}
