@@ -4,10 +4,10 @@
   "proposedName": "AA Snap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Arch0125/aa-snap"
+    "url": "https://github.com/Arch0125/snap4337"
   },
   "source": {
-    "shasum": "cW7HIg+ddteiEKtgQz8QllI7BrQSa2l30Nea5bLZvNw=",
+    "shasum": "n8A12mZyKEqfWYcNB4EpWHGX+RpYO5diXMQT1Xhj/Ow=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

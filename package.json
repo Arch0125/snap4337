@@ -4,7 +4,7 @@
   "description": "Account Abstraction Snap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Arch0125/aa-snap"
+    "url": "https://github.com/Arch0125/snap4337"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "main": "src/index.ts",
@@ -23,7 +23,8 @@
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
     "serve": "mm-snap serve",
-    "start": "mm-snap watch"
+    "start": "mm-snap watch",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^2.0.3",
@@ -34,6 +35,7 @@
     "@metamask/eslint-config-typescript": "^10.0.0",
     "@metamask/snap-types": "^0.22.0",
     "@metamask/snaps-cli": "^0.22.0",
+    "@types/node": "^18.15.0",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
@@ -43,6 +45,8 @@
     "eslint-plugin-jsdoc": "^39.2.9",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "patch-package": "^6.5.1",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.2.1",
     "prettier-plugin-packagejson": "^2.2.11",
     "rimraf": "^3.0.2",
@@ -59,6 +63,7 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.4.0",
     "@account-abstraction/sdk": "^0.4.0",
+    "buffer": "^6.0.3",
     "ethers": "^5.7.2"
   }
 }
