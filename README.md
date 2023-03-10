@@ -47,3 +47,32 @@ Call the Snap method
     });
   }
 ```
+
+
+## Run Locally
+
+ - Clone the project
+
+```bash
+  git clone https://github.com/Arch0125/snap4337
+```
+
+- Install dependencies
+
+```bash
+  yarn install
+```
+
+- Manually add polyfills
+
+Add the following to **/node_modules/@account-abstraction/sdk/dist/src/index.js**
+```bash
+ 1 | "use strict";
+ 2 | +++ globalThis.Buffer = require('buffer/').Buffer;
+ 3 | var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2)
+```
+- Start the server
+```bash 
+yarn start
+```
+
