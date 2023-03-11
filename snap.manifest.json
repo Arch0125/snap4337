@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Account Abstraction Snap",
   "proposedName": "AA Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/Arch0125/snap4337"
   },
   "source": {
-    "shasum": "n8A12mZyKEqfWYcNB4EpWHGX+RpYO5diXMQT1Xhj/Ow=",
+    "shasum": "RZJN0WjDTvlYAqCQ1X2YuAB07DD8bmuupJ7/v9gQY/I=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -23,8 +23,9 @@
     "endowment:ethereum-provider": {},
     "endowment:rpc": {
       "dapps": true,
-      "snaps": false
-    }
+      "snaps": true
+    },
+    "snap_dialog": {}
   },
   "manifestVersion": "0.1"
 }

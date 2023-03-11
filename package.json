@@ -1,6 +1,6 @@
 {
   "name": "aa-snap37",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Account Abstraction Snap",
   "repository": {
     "type": "git",
@@ -63,6 +63,7 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.4.0",
     "@account-abstraction/sdk": "^0.4.0",
+    "@metamask/snaps-ui": "^0.30.0",
     "buffer": "^6.0.3",
     "ethers": "^5.7.2"
   }
