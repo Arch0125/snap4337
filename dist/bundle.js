@@ -47781,8 +47781,8 @@
       exports.getAbstractAccount = void 0;
       var _ethers = require("ethers");
       var _sdk = require("@account-abstraction/sdk");
-      const entryPointAddress = '0x0F46c65C17AA6b4102046935F33301f0510B163A';
-      const factoryAddress = '0x6C583EE7f3a80cB53dDc4789B0Af1aaFf90e55F3';
+      const entryPointAddress = '0x0576a174D229E3cFA37253523E645A78A0C91B57';
+      const factoryAddress = '0x71D63edCdA95C61D6235552b5Bc74E32d8e2527B';
       const getAbstractAccount = async () => {
         const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
         await provider.send('eth_requestAccounts', []);
@@ -47829,7 +47829,7 @@
       async function getHttpRpcClient() {
         const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
         const bundlerUrl = "https://node.stackup.sh/v1/rpc/1b79726cd7c3536558f2d641f287ccbef97aa361751ae10a06a095b66dc8edbe";
-        const entryPointAddress = "0x0F46c65C17AA6b4102046935F33301f0510B163A";
+        const entryPointAddress = "0x0576a174D229E3cFA37253523E645A78A0C91B57";
         const chainId = await provider.getNetwork().then(net => net.chainId);
         return new _HttpRpcClient.HttpRpcClient(bundlerUrl, entryPointAddress, chainId);
       }
@@ -47843,7 +47843,7 @@
       Object.defineProperty(exports, "__esModule", {
         value: true
       });
-      exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.HttpClient = void 0;
+      exports.onTransaction = exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.HttpClient = void 0;
       var _ethers = require("ethers");
       var _getAbstractAccount = require("./getAbstractAccount");
       var _getBalance = require("./getBalance");
@@ -47851,7 +47851,7 @@
       var _snapsUi = require("@metamask/snaps-ui");
       const getEoaAddress = async () => {
         const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
-        const accounts = await provider.send('eth_requestAccounts', []);
+        const accounts = await provider.send("eth_requestAccounts", []);
         return accounts[0];
       };
       exports.getEoaAddress = getEoaAddress;
@@ -47873,29 +47873,29 @@
         console.log(origin);
         console.log(request);
         switch (request.method) {
-          case 'init_aa':
+          case "init_aa":
             {
               const addr = await getAddress();
               const eoa = await getEoaAddress();
               await snap.request({
-                method: 'snap_dialog',
+                method: "snap_dialog",
                 params: {
-                  type: 'Confirmation',
-                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)('Account Generation'), (0, _snapsUi.text)(`Smart Contract Wallet ${addr} has been generated`), (0, _snapsUi.text)(`from EOA ${eoa}`)])
+                  type: "Confirmation",
+                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Account Generation"), (0, _snapsUi.text)(`Smart Contract Wallet ${addr} has been generated`), (0, _snapsUi.text)(`from EOA ${eoa}`)])
                 }
               });
               break;
             }
-          case 'deposit_aa':
+          case "deposit_aa":
             {
               const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
               const signer = provider.getSigner();
               const ethamount = await snap.request({
-                method: 'snap_dialog',
+                method: "snap_dialog",
                 params: {
-                  type: 'Prompt',
-                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)('Deposit ETH to Smart Contract Wallet'), (0, _snapsUi.text)(`Current Balance for Smart Contract Wallet ${await getAddress()} is ${await (0, _getBalance.getBalance)(await getAddress())} ETH`), (0, _snapsUi.text)('Enter the amount of ETH to deposit')]),
-                  placeholder: '0.01 ETH'
+                  type: "Prompt",
+                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Deposit ETH to Smart Contract Wallet"), (0, _snapsUi.text)(`Current Balance for Smart Contract Wallet ${await getAddress()} is ${await (0, _getBalance.getBalance)(await getAddress())} ETH`), (0, _snapsUi.text)("Enter the amount of ETH to deposit")]),
+                  placeholder: "0.01 ETH"
                 }
               });
               const addr = await getAddress();
@@ -47905,19 +47905,79 @@
               });
               await tx.wait();
               await snap.request({
-                method: 'snap_dialog',
+                method: "snap_dialog",
                 params: {
-                  type: 'Alert',
-                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)('Deposit Complete'), (0, _snapsUi.text)(`New Balance for Smart Contract Wallet ${addr} is ${await (0, _getBalance.getBalance)(addr)} ETH`)])
+                  type: "Alert",
+                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Deposit Complete"), (0, _snapsUi.text)(`New Balance for Smart Contract Wallet ${addr} is ${await (0, _getBalance.getBalance)(addr)} ETH`)])
+                }
+              });
+              break;
+            }
+          case "transact_aa":
+            {
+              const aa = await (0, _getAbstractAccount.getAbstractAccount)();
+              const target = _ethers.ethers.utils.getAddress("0x118aeFa610ceb7C42C73d83dfC3D8C54124A4946");
+              const value = _ethers.ethers.utils.parseEther("0.001");
+              const op = await aa.createSignedUserOp({
+                target,
+                value,
+                data: "0x"
+              });
+              const client = await HttpClient();
+              const uoHash = await client.sendUserOpToBundler(op);
+              console.log(`UserOpHash: ${uoHash}`);
+              const txHash = await aa.getUserOpReceipt(uoHash);
+              console.log(`Transaction hash: ${txHash}`);
+              await snap.request({
+                method: "snap_dialog",
+                params: {
+                  type: "Alert",
+                  content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Transaction Sent"), (0, _snapsUi.text)(`Transaction sent to the network`), (0, _snapsUi.text)(`UserOpHash: ${uoHash}`), (0, _snapsUi.text)(`Transaction hash: ${txHash}`)])
                 }
               });
               break;
             }
           default:
-            throw new Error('Method not found.');
+            throw new Error("Method not found.");
         }
       };
       exports.onRpcRequest = onRpcRequest;
+      const onTransaction = async ({
+        transaction,
+        chainId
+      }) => {
+        const insights = transaction;
+        const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const addr = await getAddress();
+        const fromaddr = `From : ${addr.slice(0, 6)}` + `...` + `${addr.slice(-4)}`;
+        const toaddr = `To : ${String(insights.to).slice(0, 6)}` + `...` + `${String(insights.to).slice(-4)}`;
+        const target = String(transaction.to);
+        const value = transaction.value;
+        const data = transaction.data;
+        const aa = await (0, _getAbstractAccount.getAbstractAccount)();
+        const op = await aa.createSignedUserOp({
+          target,
+          value,
+          data
+        });
+        const client = await HttpClient();
+        const uoHash = await client.sendUserOpToBundler(op);
+        console.log(`UserOpHash: ${uoHash}`);
+        const txHash = await aa.getUserOpReceipt(uoHash);
+        console.log(`Transaction hash: ${txHash}`);
+        const res = await snap.request({
+          method: "snap_dialog",
+          params: {
+            type: "Alert",
+            content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Transaction Sent"), (0, _snapsUi.text)(`Transaction sent to the network`), (0, _snapsUi.text)(`UserOpHash: ${uoHash}`), (0, _snapsUi.text)(`Transaction hash: ${txHash}`)])
+          }
+        });
+        return {
+          content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Welcome to AA Snap!"), (0, _snapsUi.text)("If you want to sign using your **SCW**, please click the **REJECT** button below."), (0, _snapsUi.text)("You will be taken to the AA Snap UI where you can sign the transaction."), (0, _snapsUi.text)("or **CONFIRM** here to sign using your **EOA**")])
+        };
+      };
+      exports.onTransaction = onTransaction;
     }, {
       "./getAbstractAccount": 282,
       "./getBalance": 283,
