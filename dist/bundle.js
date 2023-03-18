@@ -47828,7 +47828,7 @@
       var _ethers = require("ethers");
       async function getHttpRpcClient() {
         const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
-        const bundlerUrl = "https://node.stackup.sh/v1/rpc/1b79726cd7c3536558f2d641f287ccbef97aa361751ae10a06a095b66dc8edbe";
+        const bundlerUrl = "https://node.stackup.sh/v1/rpc/e5016bd026ad62bf0fc476e96207cbc63ef2d2c8b40002a6ced78eb3f68304c0";
         const entryPointAddress = "0x0576a174D229E3cFA37253523E645A78A0C91B57";
         const chainId = await provider.getNetwork().then(net => net.chainId);
         return new _HttpRpcClient.HttpRpcClient(bundlerUrl, entryPointAddress, chainId);
@@ -47843,7 +47843,7 @@
       Object.defineProperty(exports, "__esModule", {
         value: true
       });
-      exports.onTransaction = exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.HttpClient = void 0;
+      exports.onTransaction = exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.broadcastTransaction = exports.HttpClient = void 0;
       var _ethers = require("ethers");
       var _getAbstractAccount = require("./getAbstractAccount");
       var _getBalance = require("./getBalance");
@@ -47947,37 +47947,31 @@
         chainId
       }) => {
         const insights = transaction;
-        const provider = new _ethers.ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        const addr = await getAddress();
-        const fromaddr = `From : ${addr.slice(0, 6)}` + `...` + `${addr.slice(-4)}`;
-        const toaddr = `To : ${String(insights.to).slice(0, 6)}` + `...` + `${String(insights.to).slice(-4)}`;
-        const target = String(transaction.to);
-        const value = transaction.value;
-        const data = transaction.data;
         const aa = await (0, _getAbstractAccount.getAbstractAccount)();
-        const op = await aa.createSignedUserOp({
-          target,
-          value,
-          data
+        const tx = await aa.createSignedUserOp({
+          target: transaction.to,
+          value: transaction.value,
+          data: transaction.data
         });
         const client = await HttpClient();
-        const uoHash = await client.sendUserOpToBundler(op);
-        console.log(`UserOpHash: ${uoHash}`);
-        const txHash = await aa.getUserOpReceipt(uoHash);
-        console.log(`Transaction hash: ${txHash}`);
-        const res = await snap.request({
+        snap.request({
           method: "snap_dialog",
           params: {
-            type: "Alert",
-            content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Transaction Sent"), (0, _snapsUi.text)(`Transaction sent to the network`), (0, _snapsUi.text)(`UserOpHash: ${uoHash}`), (0, _snapsUi.text)(`Transaction hash: ${txHash}`)])
+            type: "Confirmation",
+            content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Account Generation"), (0, _snapsUi.text)(`Smart Contract Wallet has been generated`), (0, _snapsUi.text)(`from EOA ${await client.sendUserOpToBundler(tx)}}`)])
           }
         });
         return {
-          content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Welcome to AA Snap!"), (0, _snapsUi.text)("If you want to sign using your **SCW**, please click the **REJECT** button below."), (0, _snapsUi.text)("You will be taken to the AA Snap UI where you can sign the transaction."), (0, _snapsUi.text)("or **CONFIRM** here to sign using your **EOA**")])
+          content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Welcome to AA Snap!"), (0, _snapsUi.text)("If you want to sign using your **SCW**, please click the **REJECT** button below."), (0, _snapsUi.text)("You will be taken to the AA Snap UI where you can sign the transaction."), (0, _snapsUi.text)("or **CONFIRM** here to sign using your **EOA**"), (0, _snapsUi.heading)("Transaction details :")])
         };
       };
       exports.onTransaction = onTransaction;
+      const broadcastTransaction = async tx => {
+        const client = await HttpClient();
+        await client.sendUserOpToBundler(tx);
+        return true;
+      };
+      exports.broadcastTransaction = broadcastTransaction;
     }, {
       "./getAbstractAccount": 282,
       "./getBalance": 283,

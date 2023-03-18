@@ -131,46 +131,34 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId,
 }) => {
   const insights = transaction;
-  const provider = new ethers.providers.Web3Provider(ethereum);
-  const signer = provider.getSigner();
-  const addr = await getAddress();
-  const fromaddr = `From : ${addr.slice(0, 6)}` + `...` + `${addr.slice(-4)}`;
-  const toaddr =
-    `To : ${String(insights.to).slice(0, 6)}` +
-    `...` +
-    `${String(insights.to).slice(-4)}`;
-
-  const target: string = String(transaction.to);
-  const value: any = transaction.value;
-  const data: any = transaction.data;
-
   const aa = await getAbstractAccount();
-  const op = await aa.createSignedUserOp({
-    target,
-    value,
-    data,
+
+  const tx = await aa.createSignedUserOp({
+    target: (transaction.to as unknown) as string,
+    value: (transaction.value as unknown) as string,
+    data: (transaction.data as unknown) as string,
   });
+
   const client = await HttpClient();
-  const uoHash = await client.sendUserOpToBundler(op);
-  console.log(`UserOpHash: ${uoHash}`);
+  //client.sendUserOpToBundler(tx);
 
-  const txHash = await aa.getUserOpReceipt(uoHash);
-  console.log(`Transaction hash: ${txHash}`);
+  // broadcastTransaction(tx);
 
-  const res = await snap.request({
+  snap.request({
     method: "snap_dialog",
     params: {
-      type: "Alert",
+      type: "Confirmation",
       content: panel([
-        heading("Transaction Sent"),
-        text(`Transaction sent to the network`),
-        text(`UserOpHash: ${uoHash}`),
-        text(`Transaction hash: ${txHash}`),
+        heading("Account Generation"),
+        text(`Smart Contract Wallet has been generated`),
+        text(`from EOA ${await client.sendUserOpToBundler(tx)}}`),
       ]),
     },
   });
+ 
 
   return {
+    
     content: panel([
       heading("Welcome to AA Snap!"),
       text(
@@ -180,6 +168,13 @@ export const onTransaction: OnTransactionHandler = async ({
         "You will be taken to the AA Snap UI where you can sign the transaction."
       ),
       text("or **CONFIRM** here to sign using your **EOA**"),
-    ]),
+      heading("Transaction details :"),
+    ],),
   };
 };
+
+export const broadcastTransaction = async (tx : any) => {
+  const client = await HttpClient();
+  await client.sendUserOpToBundler(tx);
+  return true;
+}

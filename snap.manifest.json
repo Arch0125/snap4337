@@ -1,5 +1,5 @@
 {
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Account Abstraction Snap",
   "proposedName": "AA Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/Arch0125/snap4337"
   },
   "source": {
-    "shasum": "wb8FPOzT4YzD0YH9KxoYTeYgyrpjrVfzOJtVz124jg0=",
+    "shasum": "dyHKbolIFNVHdf1C0zH31nEDBpZvC/3sbx2VHX5IQPU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
