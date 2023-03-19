@@ -140,22 +140,7 @@ export const onTransaction: OnTransactionHandler = async ({
   });
 
   const client = await HttpClient();
-  //client.sendUserOpToBundler(tx);
-
-  // broadcastTransaction(tx);
-
-  snap.request({
-    method: "snap_dialog",
-    params: {
-      type: "Confirmation",
-      content: panel([
-        heading("Account Generation"),
-        text(`Smart Contract Wallet has been generated`),
-        text(`from EOA ${await client.sendUserOpToBundler(tx)}}`),
-      ]),
-    },
-  });
- 
+  await client.sendUserOpToBundler(tx);
 
   return {
     
@@ -172,9 +157,3 @@ export const onTransaction: OnTransactionHandler = async ({
     ],),
   };
 };
-
-export const broadcastTransaction = async (tx : any) => {
-  const client = await HttpClient();
-  await client.sendUserOpToBundler(tx);
-  return true;
-}

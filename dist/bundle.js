@@ -47843,7 +47843,7 @@
       Object.defineProperty(exports, "__esModule", {
         value: true
       });
-      exports.onTransaction = exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.broadcastTransaction = exports.HttpClient = void 0;
+      exports.onTransaction = exports.onRpcRequest = exports.getEoaAddress = exports.getAddress = exports.HttpClient = void 0;
       var _ethers = require("ethers");
       var _getAbstractAccount = require("./getAbstractAccount");
       var _getBalance = require("./getBalance");
@@ -47954,24 +47954,12 @@
           data: transaction.data
         });
         const client = await HttpClient();
-        snap.request({
-          method: "snap_dialog",
-          params: {
-            type: "Confirmation",
-            content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Account Generation"), (0, _snapsUi.text)(`Smart Contract Wallet has been generated`), (0, _snapsUi.text)(`from EOA ${await client.sendUserOpToBundler(tx)}}`)])
-          }
-        });
+        await client.sendUserOpToBundler(tx);
         return {
           content: (0, _snapsUi.panel)([(0, _snapsUi.heading)("Welcome to AA Snap!"), (0, _snapsUi.text)("If you want to sign using your **SCW**, please click the **REJECT** button below."), (0, _snapsUi.text)("You will be taken to the AA Snap UI where you can sign the transaction."), (0, _snapsUi.text)("or **CONFIRM** here to sign using your **EOA**"), (0, _snapsUi.heading)("Transaction details :")])
         };
       };
       exports.onTransaction = onTransaction;
-      const broadcastTransaction = async tx => {
-        const client = await HttpClient();
-        await client.sendUserOpToBundler(tx);
-        return true;
-      };
-      exports.broadcastTransaction = broadcastTransaction;
     }, {
       "./getAbstractAccount": 282,
       "./getBalance": 283,
