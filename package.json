@@ -63,8 +63,10 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.4.0",
     "@account-abstraction/sdk": "^0.4.0",
+    "@metamask/key-tree": "^7.0.0",
     "@metamask/snaps-ui": "^0.30.0",
     "buffer": "^6.0.3",
+    "crypto": "^1.0.1",
     "ethers": "^5.7.2"
   }
 }

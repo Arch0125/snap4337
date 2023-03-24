@@ -1,5 +1,5 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Account Abstraction Snap",
   "proposedName": "AA Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/Arch0125/snap4337"
   },
   "source": {
-    "shasum": "nGB24IzzDJgDqvmTfq78lodVACxgDmYZ+LZFmUf5jZE=",
+    "shasum": "Q3bJ4y2t8UgcmdujPXprtzKBIY3SGfvIDWVcDAdAo3c=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -28,7 +28,12 @@
     "snap_dialog": {},
     "endowment:transaction-insight": {
       "allowTransactionOrigin": true
-    }
+    },
+    "snap_getBip44Entropy": [
+      {
+        "coinType": 60
+      }
+    ]
   },
   "manifestVersion": "0.1"
 }
